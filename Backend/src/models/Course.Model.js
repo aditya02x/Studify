@@ -9,27 +9,25 @@ const courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    price:{
+    price: {
         type: Number,
         required: true
-
-
     },
-    thumbnail:{
+    thumbnail: {
         type: String,
-        required: true,
         default: "https://www.shutterstock.com/image-vector/default-placeholder-image-vector-260nw-138556879.jpg"
     },
-    lectures: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    teacher:{
+    lectures: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Lecture'
+        }
+    ],
+    instructor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     }
-},{ timestamps: true })
+}, { timestamps: true });
 
-export default mongoose.model('Course', courseSchema)
+export default mongoose.model('Course', courseSchema);
