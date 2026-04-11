@@ -49,3 +49,22 @@ export const getAllCourses = async (req, res) => {
     }
 };
 
+
+export const getSingleCourse = async (req, res) => {
+    try {
+        const courseId = req.params.id;
+
+        const course = await Course.findById(courseId).select('title description price thumbnail createdAt updatedAt').populate('instructor', 'name email');
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+        return res.status(200).json({
+            success: true,
+            course
+        });
+        
+    } catch (error) {
+        console.error("Error in getSingleCourse", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
