@@ -68,3 +68,29 @@ export const getSingleCourse = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+
+export const deleteCourse = async (req,res)=>{
+    try {
+        const courseId = req.params.id;
+        const course = await Course.findById(courseId);
+
+        if(!course){
+            return res.status(404).json({message:"Course Not Found"})
+        }
+
+        if(course.instructor.toString() !== req.user._id.toString()){
+            return res.status(403).json({message:"You are not authorized to delete this course"})
+        }
+
+        await course.deleteOne();
+
+        return res.status(200).json({message:"Course Deleted Successfully"})
+
+        
+    } catch (error) {
+        console.error("Error in deleteCourse", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+        
+    }
+}
