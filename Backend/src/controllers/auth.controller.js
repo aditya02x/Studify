@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -38,7 +38,7 @@ export const registerUser = async (req,res)=>{
 }
 
 
-export const ooginUser = async (req,res)=>{
+export const LoginUser = async (req,res)=>{
     try {
         const {email ,password} = req.body
 
