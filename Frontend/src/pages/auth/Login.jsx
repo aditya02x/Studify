@@ -17,14 +17,19 @@ const Login = () => {
         email,
         password,
       });
+      console.log("Full Backend Response:", res.data);
 
       // save token (important for auth)
       localStorage.setItem("token", res.data.token);
+      //save name
+      localStorage.setItem("name", res.data.user.name);
+
 
       toast.success(res.data?.message || "Login successful 🚀");
+      localStorage.setItem("token", res.data.token);
 
       // redirect to home
-      navigate("/");
+      navigate("/Student-dashboard");
 
     } catch (error) {
       toast.error(
