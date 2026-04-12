@@ -1,11 +1,9 @@
 import authMiddleware from "../middleware/auth.middleware.js";
 import express from "express";
-import { createLecture } from "../controllers/Lecture.controller.js";
+import { createLecture , getLecturesByCourse , deleteLecture } from "../controllers/Lecture.controller.js";
 import isInstructor from "../middleware/Instructor.middleware.js";
 const router = express.Router();
-router.post('/', authMiddleware, isInstructor, createLecture);
-router.get('/:courseId', authMiddleware, getLecturesByCourse);
+router.post('/create', authMiddleware, isInstructor, createLecture);
+router.get('/course/:courseId', authMiddleware, getLecturesByCourse);
 router.delete('/:lectureId', authMiddleware, isInstructor, deleteLecture);
-
-
 export default router;
