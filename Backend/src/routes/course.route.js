@@ -1,6 +1,6 @@
 import express from "express";
 import { createCourse , getAllCourses , deleteCourse , getSingleCourse } from "../controllers/course.controller.js";
-import authMiddleware from "../middleware/Instructor.middleware.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 import isInstructor from "../middleware/Instructor.middleware.js";
 const router = express.Router();
 
