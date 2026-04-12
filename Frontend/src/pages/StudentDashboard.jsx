@@ -32,7 +32,7 @@ const StudentDashboard = () => {
         {/* Nav */}
         <nav className='flex flex-col gap-1 px-3 pt-4 flex-1'>
           <button
-            onClick={() => { setActive('view'); navigate('/dashboard/my-courses') }}
+            onClick={() => { setActive('view'); navigate('/my-courses') }}
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 w-full text-left
               ${active === 'view'
                 ? 'bg-indigo-50 text-indigo-700'
@@ -61,7 +61,12 @@ const StudentDashboard = () => {
         {/* Logout */}
         <div className='px-3 pb-6'>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() =>{
+                localStorage.removeItem('token');
+                localStorage.removeItem('name');
+
+                navigate('/login')}
+            }
             className='flex items-center justify-center gap-3 py-2.5 rounded-lg text-sm font-medium text-red-500 bg-red-50 border border-red-100 hover:bg-red-100 transition-all duration-150 w-full'
           >
             <svg className='w-4 h-4 flex-shrink-0' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
