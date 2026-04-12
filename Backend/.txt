@@ -1,0 +1,14 @@
+{
+    "message": "Course created successfully",
+    "course": {
+        "title": "Testing jee course",
+        "description": "Learn Jee from scratch",
+        "price": 499,
+        "thumbnail": "https://www.shutterstock.com/image-vector/default-placeholder-image-vector-260nw-138556879.jpg",
+        "lectures": [],
+        "instructor": "69db89ec6e81d753cf747797",
+        "_id": "69db8a446e81d753cf747798",
+        "createdAt": "2026-04-12T12:04:20.293Z",
+        "updatedAt": "2026-04-12T12:04:20.293Z",
+        "__v": 0
+    }

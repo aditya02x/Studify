@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { connectDB } from "./src/db/db.js";
 import dotenv from "dotenv";
+import lectureRoutes from "./src/routes/lecture.routes.js";
 import authRoutes from "./src/routes/auth.route.js";
 import courseRoutes from "./src/routes/course.route.js";
 dotenv.config();
@@ -15,7 +16,8 @@ app.get('/',(req,res)=>{
 })
 
 app.use('/api/auth',authRoutes)
-app.use('/api/course',courseRoutes)
+app.use('/api/courses',courseRoutes)
+app.use('/api/lectures', lectureRoutes)
 
 const PORT = process.env.PORT || 3000;
 
