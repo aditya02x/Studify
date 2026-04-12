@@ -6,14 +6,13 @@ const lectureSchema = new mongoose.Schema({
     },
     video:{
         type:String,
+        required:true
     
     },
-    course:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
-        required: true
+    duration:{
+        type:Number
     }
 
-})
+},{timestamps:true})
 
 export default mongoose.model('Lecture',lectureSchema)
