@@ -62,7 +62,7 @@ const AllCourses = () => {
               </p>
 
               <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                <span className="text-blue-600 font-bold text-lg">
+                <span className="text-green-500 font-bold text-lg">
                    ₹{course.price}
                 </span>
                 <button className="bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
