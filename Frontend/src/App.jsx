@@ -9,7 +9,7 @@ import MyCourse from "./pages/MyCourse";
 import CourseCard from "./components/CourseCard";
 import AllCourses from "./pages/AllCourses";
 import Instructor from "./pages/Instructor/Instructor";
-import CreateNew from "./pages/Instructor/CreateNew";
+
 
 import ProtectedRoute from "./components/ProctedRoute";
 import { ToastContainer } from "react-toastify";
@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/course-card" element={<CourseCard />} />
         <Route path="/dashboard/all-courses" element={<AllCourses />} />
         <Route path="/instructor" element={<Instructor />} />
-        <Route path="/instructor/create-course" element={<CreateNew />} />
+    
 
         {/* Protected */}
         <Route
