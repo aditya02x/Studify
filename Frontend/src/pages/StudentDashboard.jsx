@@ -84,6 +84,7 @@ const StudentDashboard = () => {
                 <h1 className='text-2xl font-semibold text-gray-800'>Hello, {name }!</h1>
             </div>
       </nav>
+      <h1 className='text-5xl'>Heloo</h1>
 
 
         <Outlet />
