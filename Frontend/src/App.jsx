@@ -6,6 +6,8 @@ import Login from "./pages/auth/Login";
 import Home from "./pages/Home";
 import StudentDashboard from "./pages/StudentDashboard";
 import MyCourse from "./pages/MyCourse";
+import CourseCard from "./components/CourseCard";
+import AllCourses from "./pages/AllCourses";
 
 import ProtectedRoute from "./components/ProctedRoute";
 import { ToastContainer } from "react-toastify";
@@ -21,6 +23,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/my-courses" element={<MyCourse />} />
+        <Route path="/course-card" element={<CourseCard />} />
+        <Route path="/dashboard/all-courses" element={<AllCourses />} />
 
         {/* Protected */}
         <Route

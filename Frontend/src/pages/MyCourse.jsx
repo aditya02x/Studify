@@ -8,7 +8,7 @@ const MyCourse = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await api.get("/course/my-courses");
+        const res = await api.get("/course");
         setCourses(res.data.courses);
       } catch (error) {
         console.error("Error fetching courses:", error);
