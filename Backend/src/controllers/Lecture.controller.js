@@ -66,43 +66,30 @@ export const createLecture = async (req, res) => {
 export const getLecturesByCourse = async (req, res) => {
   try {
     const { courseId } = req.params;
-    const userId = req.user._id;
 
-    const course = await Course.findById(courseId).populate('lectures');
+    const course = await Course.findById(courseId).populate("lectures");
 
     if (!course) {
       return res.status(404).json({
         success: false,
-        message: "Course Not Found"
+        message: "Course Not Found",
       });
     }
-    // check if user is enrolled or instructor
-  const isEnrolled = course.students.some(
-  (id) => id.toString() === userId.toString()
-);
-    if(!isEnrolled){
-        return res.status(403).json({
-            success: false,
-            message: "Access denied. Enroll in the course to access lectures"
-        })
-    }
 
-
-
+    // ✅ TEMP: allow everyone (so you can continue building)
     return res.status(200).json({
       success: true,
-      lectures: course.lectures
+      lectures: course.lectures,
     });
 
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
+      message: "Internal Server Error",
     });
   }
 };
-
 
 // DELETE LECTURE
 export const deleteLecture = async (req, res) => {
