@@ -17,19 +17,13 @@ const Login = () => {
         email,
         password,
       });
-      console.log("Full Backend Response:", res.data);
 
-      // save token (important for auth)
       localStorage.setItem("token", res.data.token);
-      //save name
       localStorage.setItem("name", res.data.user.name);
 
-
       toast.success(res.data?.message || "Login successful 🚀");
-      localStorage.setItem("token", res.data.token);
 
-      // redirect to home
-      navigate("/Student-dashboard");
+      navigate("/student-dashboard");
 
     } catch (error) {
       toast.error(
@@ -39,61 +33,72 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 p-4">
+      
+      <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl shadow-xl p-8">
 
+        {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">Login</h2>
-          <p className="text-gray-500 mt-2">Access your learning dashboard</p>
+          <h2 className="text-3xl font-bold text-white">Login</h2>
+          <p className="text-gray-400 mt-2">
+            Access your dashboard 🚀
+          </p>
         </div>
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
 
+          {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="text-sm text-gray-400">
               Email Address
             </label>
             <input
               type="email"
               placeholder="name@example.com"
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full mt-1 px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
           </div>
 
+          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="text-sm text-gray-400">
               Password
             </label>
             <input
               type="password"
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="w-full mt-1 px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
           </div>
 
+          {/* Button */}
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow-md transition"
+            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-lg transition-all"
           >
             Sign In
           </button>
+
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-8">
+        {/* Footer */}
+        <p className="text-center text-sm text-gray-400 mt-6">
           Don't have an account?{" "}
           <Link
             to="/signup"
-            className="text-indigo-600 font-medium hover:underline"
+            className="text-indigo-400 font-medium hover:underline"
           >
             Sign up
           </Link>
         </p>
+
       </div>
     </div>
   );
