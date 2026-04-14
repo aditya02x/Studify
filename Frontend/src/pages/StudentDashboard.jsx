@@ -1,15 +1,52 @@
+// import { set } from 'mongoose'
 import React, { useEffect } from 'react'
 import { useNavigate, Outlet } from 'react-router-dom'
+import { toast } from "react-toastify";
+import api from "../services/api.js";
+
 
 const StudentDashboard = () => {
   const navigate = useNavigate()
   const [name, setName] = React.useState('')
   const [active, setActive] = React.useState('view')
+  const [courses, setCourses] = React.useState([])
+  const [loading,setLoading]=React.useState(true)
+
+
 
   useEffect(() => {
+    const fetchCources = async ()=>{
+      try{
+        const res = await api.get('/courses')
+        setCourses(res.data.courses)
+
+      }catch(error){
+        toast.error('Failed to load courses')
+      }finally{
+        setLoading(false)
+      }
+
+    }
+    fetchCources()
+
+
+
+
+
+
     const storedName = localStorage.getItem('name')
     if (storedName) setName(storedName)
   }, [])
+
+  if(loading){
+    return (
+      <div className='text-center p-10 text-gray-300 font-medium bg-gray-950 min-h-screen'>
+        toast.sucess('Courses loaded successfully!')
+        Loading courses...
+      </div>
+    )
+  }
+
 
   return (
     <div className='flex h-screen bg-gray-950 text-white'>
@@ -89,10 +126,60 @@ const StudentDashboard = () => {
           </div>
         </nav>
 
-        <div className='h-full w-full p-5'>
-          <h1 className='text-4xl font-bold text-white'>
+        <div className='h-full w-full p-5 mb-8"'>
+          <h1 className='text-4xl font-bold text-white mb-10' >
             Popular Courses
           </h1>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {courses?.map((course)=>(
+              <div
+              key={course._id}
+              className='group flex flex-col border border-gray-800 rounded-2xl overflow-hidden bg-gray-900 shadow-sm hover:shadow-xl transition-all duration-300 transform hover: -translate-y-1-1'>
+
+                {/*thumbnail */}
+                <div className='relatiive overflow-hidden aspect-auto'>
+                  <img src={course.thumbnail} alt={course.title}
+                  className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-110' />
+ 
+
+
+                </div>
+                {/* {content} */}
+                <div className='p-5 flex flex-col flex-grow'>
+                  <h2 className='font-bold text-lg text-white'>
+                    {course.title}
+                  </h2>
+                  <p className='text-gray-400 text-sm mt-2 '>
+                    {course.description}
+
+                  </p>
+
+                  <div className='mt-4 pt-4 border-t border-gray-800 flex items-center justify-between'>
+                    <span className='text-green-400 font-bold '>
+                      ${course.price}
+
+                    </span>
+
+                    <button onClick={()=> navigate(`/course/${course._id}`)}
+                      className='bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition'>
+
+                        View course
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+
+
+              </div>
+            ))}
+
+          </div>
+
+
         </div>
 
         <Outlet />
