@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api.js";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Instructor = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [formLoading, setFormLoading] = useState(false);
-
   const [showForm, setShowForm] = useState(false);
 
-  // GET courses
+  const navigate = useNavigate();
+
   const fetchCourses = async () => {
     try {
       const res = await api.get("/courses");
@@ -32,29 +31,22 @@ const Instructor = () => {
     fetchCourses();
   }, []);
 
-  // CREATE course
   const handleCreate = async (e) => {
     e.preventDefault();
     setFormLoading(true);
-
     try {
       const token = localStorage.getItem("token");
-
       await api.post(
         "/courses",
         { title, description, price, thumbnail },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
       toast.success("Course created successfully!");
-
-      // reset form
       setTitle("");
       setDescription("");
       setPrice("");
       setThumbnail("");
       setShowForm(false);
-
       fetchCourses();
     } catch (error) {
       console.error(error);
@@ -64,15 +56,12 @@ const Instructor = () => {
     }
   };
 
-  // DELETE course
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-
       await api.delete(`/courses/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       toast.success("Course deleted");
       setCourses((prev) => prev.filter((c) => c._id !== id));
     } catch (error) {
@@ -81,101 +70,147 @@ const Instructor = () => {
     }
   };
 
-  if (loading) return <p className="p-6">Loading...</p>;
+  if (loading)
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <p className="text-gray-500 text-sm">Loading courses...</p>
+      </div>
+    );
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen bg-gray-950">
+      <div className="max-w-6xl mx-auto px-6 py-10">
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Instructor Dashboard</h1>
-
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-black text-white px-4 py-2 rounded"
-        >
-          {showForm ? "Close" : "Create New"}
-        </button>
-      </div>
-
-      {/* CREATE FORM */}
-      {showForm && (
-        <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg mb-6">
-          <h2 className="text-3xl font-bold mb-6">Create Course</h2>
-
-          <form onSubmit={handleCreate} className="space-y-4">
-            <input
-              type="text"
-              placeholder="Course Title"
-              className="w-full border p-3 rounded"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-
-            <textarea
-              placeholder="Description"
-              className="w-full border p-3 rounded"
-              rows="4"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-
-            <input
-              type="number"
-              placeholder="Price"
-              className="w-full border p-3 rounded"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              required
-            />
-
-            <input
-              type="text"
-              placeholder="Thumbnail URL"
-              className="w-full border p-3 rounded"
-              value={thumbnail}
-              onChange={(e) => setThumbnail(e.target.value)}
-              required
-            />
-
+        {/* HEADER */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Instructor Dashboard</h1>
+            <p className="text-gray-500 text-sm mt-1">
+              {courses.length} course{courses.length !== 1 ? "s" : ""} published
+            </p>
+          </div>
+          <div className="flex gap-2">
             <button
-              type="submit"
-              disabled={formLoading}
-              className="w-full bg-black text-white p-3 rounded disabled:opacity-60"
+              onClick={() => navigate("/upload-lecture")}
+              className="px-4 py-2 text-sm font-medium rounded-xl border border-gray-700 bg-gray-900 text-gray-300 hover:bg-gray-800 transition-all"
             >
-              {formLoading ? "Publishing..." : "Publish Course"}
+              Upload Lecture
             </button>
-          </form>
-        </div>
-      )}
-
-      {/* COURSES GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {courses.map((course) => (
-          <div
-            key={course._id}
-            className="border rounded-xl p-4 shadow bg-white"
-          >
-            <img
-              src={course.thumbnail}
-              className="h-40 w-full object-cover rounded"
-              alt={course.title}
-            />
-
-            <h2 className="font-bold mt-2">{course.title}</h2>
-
-            <p className="text-gray-600 text-sm">₹{course.price}</p>
-
             <button
-              onClick={() => handleDelete(course._id)}
-              className="mt-3 bg-red-500 text-white px-3 py-1 rounded"
+              onClick={() => setShowForm(!showForm)}
+              className="px-4 py-2 text-sm font-medium rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-all"
             >
-              Delete Course
+              {showForm ? "Cancel" : "+ New Course"}
             </button>
           </div>
-        ))}
+        </div>
+
+        {/* CREATE FORM */}
+        {showForm && (
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-8">
+            <h2 className="text-lg font-semibold text-white mb-5">Create New Course</h2>
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">Title</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Full Stack with React"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">Price (₹)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 499"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">Thumbnail URL</label>
+                <input
+                  type="text"
+                  placeholder="https://..."
+                  className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                  value={thumbnail}
+                  onChange={(e) => setThumbnail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">Description</label>
+                <textarea
+                  placeholder="What will students learn?"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"
+                  rows="3"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="border-t border-gray-800 pt-4">
+                <button
+                  type="submit"
+                  disabled={formLoading}
+                  className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed text-white font-medium text-sm rounded-xl py-3 transition-all"
+                >
+                  {formLoading ? "Publishing..." : "Publish Course"}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* COURSES GRID */}
+        {courses.length === 0 ? (
+          <div className="text-center py-20 bg-gray-900 border border-gray-800 rounded-2xl">
+            <p className="text-gray-600 text-sm">No courses yet. Create your first one!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {courses.map((course) => (
+              <div
+                key={course._id}
+                className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:border-gray-700 transition-all"
+              >
+                <img
+                  src={course.thumbnail}
+                  className="h-44 w-full object-cover"
+                  alt={course.title}
+                />
+                <div className="p-4">
+                  <h2 className="font-semibold text-white text-sm leading-snug">{course.title}</h2>
+                  <p className="text-indigo-400 font-medium text-sm mt-1">₹{course.price}</p>
+                  <div className="border-t border-gray-800 mt-4 pt-3 flex gap-2">
+                    <button
+                      onClick={() => navigate("/upload-lecture")}
+                      className="flex-1 text-xs font-medium py-2 rounded-lg border border-gray-700 text-gray-400 hover:bg-gray-800 transition-all"
+                    >
+                      Add Lecture
+                    </button>
+                    <button
+                      onClick={() => handleDelete(course._id)}
+                      className="flex-1 text-xs font-medium py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
