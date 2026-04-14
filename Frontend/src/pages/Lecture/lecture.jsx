@@ -1,6 +1,6 @@
 import React from 'react'
 
-const LecturePlayer = () => {
+const lecture = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const LecturePlayer = () => {
   )
 }
 
-export default LecturePlayer
+export default lecture
