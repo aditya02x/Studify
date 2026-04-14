@@ -109,4 +109,4 @@ const AllCourses = () => {
   );
 };
 
-export default AllCours
+export default AllCourses;
