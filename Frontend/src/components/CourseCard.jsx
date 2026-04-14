@@ -1,8 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const CourseCard = ({ course, onEdit, onDelete, onAddLecture }) => {
+
+  const navigate = useNavigate();
+
   return (
-    <div className="border rounded-xl shadow-md p-4 w-full max-w-md bg-white">
+    <div
+      onClick={() => navigate(`/course/${course._id}`)} // ✅ THIS LINE
+      className="border rounded-xl shadow-md p-4 w-full max-w-md bg-white cursor-pointer"
+    >
       
       {/* Thumbnail */}
       <img
@@ -27,7 +34,10 @@ const CourseCard = ({ course, onEdit, onDelete, onAddLecture }) => {
       </p>
 
       {/* Buttons */}
-      <div className="flex gap-2 mt-4 flex-wrap">
+      <div
+        className="flex gap-2 mt-4 flex-wrap"
+        onClick={(e) => e.stopPropagation()} // ✅ IMPORTANT (prevents redirect when clicking buttons)
+      >
 
         <button
           onClick={() => onEdit(course)}

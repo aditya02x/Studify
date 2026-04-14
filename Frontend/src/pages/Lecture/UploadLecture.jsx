@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 const UploadLecture = () => {
   const [title, setTitle] = React.useState("");
   const [video, setVideo] = React.useState("");
+  const [duration, setDuration] = React.useState("");
   const [courseId, setCourseId] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
@@ -16,7 +17,7 @@ const UploadLecture = () => {
 
     api.post(
       "/lectures/create",
-      { title, video, courseId },
+      { title, video, duration, courseId },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -27,6 +28,7 @@ const UploadLecture = () => {
         toast.success("Lecture created successfully!");
         setTitle("");
         setVideo("");
+        setDuration("");
         setCourseId("");
       })
       .catch((err) => {
@@ -55,6 +57,13 @@ const UploadLecture = () => {
           placeholder="Video URL"
           value={video}
           onChange={(e) => setVideo(e.target.value)}
+          className="w-full p-3 rounded bg-gray-800 text-white"
+        />
+        <input
+          type="number"
+          placeholder="Duration (minutes)"
+          value={duration}
+          onChange={(e) => setDuration(e.target.value)}
           className="w-full p-3 rounded bg-gray-800 text-white"
         />
 
