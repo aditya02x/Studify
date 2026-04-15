@@ -36,6 +36,7 @@ const App = () => {
         {/* ✅ FIXED ROUTES */}
         <Route path="/course/:id" element={<CourseDetail />} />
         <Route path="/course/:id/lectures" element={<LecturePlayer />} />
+        
 
         {/* Protected */}
         <Route
