@@ -49,10 +49,11 @@ const AllCourses = () => {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
-        {courses?.map((course) => (
+        {courses.map((course) => (
           <div
             key={course._id}
-            className="group flex flex-col border border-gray-800 rounded-2xl overflow-hidden bg-gray-900 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            onClick={() => navigate(`/course/${course._id}`)}
+            className="cursor-pointer group flex flex-col border border-gray-800 rounded-2xl overflow-hidden bg-gray-900 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
           >
 
             {/* Thumbnail */}
@@ -74,7 +75,7 @@ const AllCourses = () => {
                 {course.title}
               </h2>
 
-              <p className="text-gray-400 text-sm mt-2 flex-grow">
+              <p className="text-gray-400 text-sm mt-2 flex-grow line-clamp-2">
                 {course.description}
               </p>
 
@@ -85,7 +86,10 @@ const AllCourses = () => {
                 </span>
 
                 <button
-                  onClick={() => navigate(`/course/${course._id}`)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // 🔥 prevents double navigation
+                    navigate(`/course/${course._id}`);
+                  }}
                   className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition"
                 >
                   View Course

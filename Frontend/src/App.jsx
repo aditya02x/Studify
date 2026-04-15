@@ -14,6 +14,7 @@ import UploadLecture from "./pages/Lecture/UploadLecture";
 import ProtectedRoute from "./components/ProctedRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CourseDetail from "./pages/CourseDetail";
 
 const App = () => {
   return (
@@ -23,13 +24,18 @@ const App = () => {
       <Routes>
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+
         <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/my-courses" element={<MyCourse />} />
         <Route path="/course-card" element={<CourseCard />} />
         <Route path="/dashboard/all-courses" element={<AllCourses />} />
+
         <Route path="/instructor" element={<Instructor />} />
         <Route path="/upload-lecture" element={<UploadLecture />} />
-        <Route path="/course/:courseId" element={<LecturePlayer />} />
+
+        {/* ✅ FIXED ROUTES */}
+        <Route path="/course/:id" element={<CourseDetail />} />
+        <Route path="/course/:id/lectures" element={<LecturePlayer />} />
 
         {/* Protected */}
         <Route

@@ -3,13 +3,12 @@ import api from "../../services/api.js";
 import { useParams } from "react-router-dom";
 
 const LecturePlayer = () => {
-  const { courseId } = useParams();
+  const { id } = useParams(); // ✅ FIXED
 
   const [lectures, setLectures] = useState([]);
   const [currentVideo, setCurrentVideo] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // convert youtube link
   const getEmbedUrl = (url) => {
     if (url.includes("watch?v=")) {
       return url.replace("watch?v=", "embed/");
@@ -22,14 +21,11 @@ const LecturePlayer = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await api.get(
-          `/lectures/course/${courseId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await api.get(`/lectures/${id}`, { // ✅ FIXED
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setLectures(res.data.lectures);
 
@@ -45,7 +41,7 @@ const LecturePlayer = () => {
     };
 
     fetchLectures();
-  }, [courseId]);
+  }, [id]);
 
   return (
     <div className="flex h-screen bg-gray-900 text-white">
@@ -79,6 +75,10 @@ const LecturePlayer = () => {
         <h2 className="text-lg font-bold mb-4 border-b border-gray-700 pb-2">
           Lectures
         </h2>
+
+        {lectures.length === 0 && (
+          <p className="text-gray-400 text-sm">No lectures available</p>
+        )}
 
         {lectures.map((lecture, index) => (
           <div
