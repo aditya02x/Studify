@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema({
         enum:["student" , "admin" , "instructor"],
         required: true
     },
+    savedCourses:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Course'
+        }
+    ]
     purchasedCourses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'

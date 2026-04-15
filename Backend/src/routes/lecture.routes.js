@@ -4,6 +4,6 @@ import { createLecture , getLecturesByCourse , deleteLecture } from "../controll
 import isInstructor from "../middleware/Instructor.middleware.js";
 const router = express.Router();
 router.post('/create', authMiddleware, isInstructor, createLecture);
-router.get('/course/:courseId', authMiddleware, getLecturesByCourse);
+router.get('/:courseId', authMiddleware, getLecturesByCourse);
 router.delete('/:lectureId', authMiddleware, isInstructor, deleteLecture);
 export default router;

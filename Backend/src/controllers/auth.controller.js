@@ -79,3 +79,24 @@ export const LoginUser = async (req,res)=>{
         res.status(500).json({message:"Internal Server Error"})
     }
 }
+
+
+
+export const toggleBookmark = async (req, res) => {
+  const userId = req.user.id;
+  const courseId = req.params.courseId;
+
+  const user = await User.findById(userId);
+
+  if (user.savedCourses.includes(courseId)) {
+    user.savedCourses = user.savedCourses.filter(
+      (id) => id.toString() !== courseId
+    );
+  } else {
+    user.savedCourses.push(courseId);
+  }
+
+  await user.save();
+
+  res.json({ success: true });
+};
