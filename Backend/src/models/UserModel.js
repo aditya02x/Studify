@@ -24,15 +24,12 @@ const userSchema = new mongoose.Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:'Course'
         }
-    ]
-    purchasedCourses: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
-    }],
+    ],
+
         createdAt: {
         type: Date,
         default: Date.now
-    ,}
+    }
 
 
 

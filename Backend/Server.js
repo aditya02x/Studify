@@ -18,6 +18,7 @@ app.get('/',(req,res)=>{
 app.use('/api/auth',authRoutes)
 app.use('/api/courses',courseRoutes)
 app.use('/api/lectures', lectureRoutes)
+ // Add this line to include user routes
 
 const PORT = process.env.PORT || 3000;
 

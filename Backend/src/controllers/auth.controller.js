@@ -83,7 +83,7 @@ export const LoginUser = async (req,res)=>{
 
 
 export const toggleBookmark = async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user._id;
   const courseId = req.params.courseId;
 
   const user = await User.findById(userId);
@@ -100,3 +100,17 @@ export const toggleBookmark = async (req, res) => {
 
   res.json({ success: true });
 };
+
+
+
+export const getBookmarkedCourses = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const user = await User.findById(userId).populate('savedCourses');
+        res.json({ success: true, bookmarkedCourses: user.savedCourses });
+        
+    } catch (error) {
+        res.status(500).json({success:false,  message: "Internal Server Error" });
+        
+    }
+}
