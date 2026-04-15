@@ -16,6 +16,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CourseDetail from "./pages/CourseDetail";
 
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ const App = () => {
 
         <Route path="/instructor" element={<Instructor />} />
         <Route path="/upload-lecture" element={<UploadLecture />} />
+        <Route path="/" element={<Home/>} />
 
         {/* ✅ FIXED ROUTES */}
         <Route path="/course/:id" element={<CourseDetail />} />
