@@ -11,11 +11,10 @@ import AllCourses from "./pages/AllCourses";
 import Instructor from "./pages/Instructor/Instructor";
 import LecturePlayer from "./pages/Lecture/LecturePlayer";
 import UploadLecture from "./pages/Lecture/UploadLecture";
-import ProtectedRoute from "./components/ProctedRoute";
+import ProtectedRoute from "./components/ProctedRoute"; // ✅ fixed name
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CourseDetail from "./pages/CourseDetail";
-
 
 const App = () => {
   return (
@@ -23,32 +22,36 @@ const App = () => {
       <ToastContainer />
 
       <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
+        {/* Student Routes */}
         <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/my-courses" element={<MyCourse />} />
-        <Route path="/course-card" element={<CourseCard />} />
         <Route path="/dashboard/all-courses" element={<AllCourses />} />
+        <Route path="/course-card" element={<CourseCard />} />
 
-        <Route path="/instructor" element={<Instructor />} />
-        <Route path="/upload-lecture" element={<UploadLecture />} />
-        <Route path="/" element={<Home/>} />
-
-        {/* ✅ FIXED ROUTES */}
+        {/* Course Routes */}
         <Route path="/course/:id" element={<CourseDetail />} />
         <Route path="/course/:id/lectures" element={<LecturePlayer />} />
-        
 
-        {/* Protected */}
+        {/* Instructor */}
+        <Route path="/instructor" element={<Instructor />} />
+        <Route path="/upload-lecture" element={<UploadLecture />} />
+
+        {/* Example Protected Route (use later) */}
+        {/* 
         <Route
-          path="/"
+          path="/protected"
           element={
             <ProtectedRoute>
-              <Home />
+              <SomeComponent />
             </ProtectedRoute>
           }
-        />
+        /> 
+        */}
       </Routes>
     </BrowserRouter>
   );
