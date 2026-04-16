@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../../services/api.js";
+import api from "../../Services/api.js";
 
 const Login = () => {
   const [email, setEmail] = React.useState("");
