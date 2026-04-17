@@ -165,3 +165,18 @@ export const CreateComment = async (req,res)=>{
   }
 
 }
+
+export const getCommentsByLecture = async (req,res)=>{
+  const {lectureId} = req.params;
+  try {
+    const comments = await Comment.find({lecture : lectureId}).populate('user', 'name').sort({createdAt : -1});
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+    });
+    
+  }
+}
