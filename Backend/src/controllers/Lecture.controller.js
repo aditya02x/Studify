@@ -169,7 +169,12 @@ export const CreateComment = async (req,res)=>{
 export const getCommentsByLecture = async (req,res)=>{
   const {lectureId} = req.params;
   try {
-    const comments = await Comment.find({lecture : lectureId}).populate('user', 'name').sort({createdAt : -1});
+    const comments = await Comment.find({lecture : lectureId}).populate('user', 'name').sort({createdAt : -1})
+    return res.status(200).json({
+      success: true,
+      comments
+    });
+    
     
   } catch (error) {
     console.error(error);
