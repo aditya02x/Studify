@@ -9,3 +9,4 @@ router.get('/', getAllCourses);
 router.get('/:id', getSingleCourse);
 router.delete('/:id', authMiddleware, isInstructor, deleteCourse);
 
+export default router;
