@@ -11,11 +11,10 @@ import isInstructor from "../middleware/Instructor.middleware.js";
 
 const router = express.Router();
 
-// ✅ Comments routes FIRST
+
 router.post('/:lectureId/comments', authMiddleware, CreateComment);
 router.get('/:lectureId/comments', authMiddleware, getCommentsByLecture);
 
-// ✅ Other routes
 router.post('/create', authMiddleware, isInstructor, createLecture);
 router.delete('/:lectureId', authMiddleware, isInstructor, deleteLecture);
 router.get('/:courseId', authMiddleware, getLecturesByCourse);
