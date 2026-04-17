@@ -3,7 +3,10 @@ import api from "../../services/api.js";
 import { useParams } from "react-router-dom";
 
 const LecturePlayer = () => {
+
+
   const { id } = useParams();
+  const [comments ,setCommets ] = useState([]);
 
   const [lectures, setLectures] = useState([]);
   const [currentVideo, setCurrentVideo] = useState("");
