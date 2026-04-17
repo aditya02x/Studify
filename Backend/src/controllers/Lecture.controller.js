@@ -126,43 +126,41 @@ export const deleteLecture = async (req, res) => {
 };
 
 export const CreateComment = async (req,res)=>{
-  const {lectureId} = req.params;
-  const {content} = req.body;
+  const { lectureId } = req.params;
+  const { content } = req.body;
   const userId = req.user._id;
 
   try {
     const lecture = await Lecture.findById(lectureId);
+
     if(!lecture){
       return res.status(404).json({
         success: false,
         message: "Lecture Not Found"
       });
     }
+
     const newComment = await Comment.create({
       content,
       user: userId,
       lecture: lectureId
     });
-   lecture.comments.push(comment._id);
+
+    lecture.comments.push(newComment._id);
     await lecture.save();
 
+    return res.status(201).json({ 
+      success: true,
+      comment: newComment
+    });
 
-
-
-      return res.status(201).json({ 
-          success: true,
-          comment: newComment
-        });
-    
   } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-          success: false,
-          message: "Internal Server Error"
-      });
-    
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
   }
-
 }
 
 export const getCommentsByLecture = async (req,res)=>{
