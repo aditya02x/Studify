@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import Lecture from '../models/Lecture.model.js';
 import Course from '../models/Course.Model.js';
-import Comment from '../models/Comment.model.js';
-
+import Comment from '../models/Comment.js'
 // CREATE LECTURE
 export const createLecture = async (req, res) => {
   const session = await mongoose.startSession();
@@ -174,7 +173,7 @@ export const getCommentsByLecture = async (req,res)=>{
       success: true,
       comments
     });
-    
+
     
   } catch (error) {
     console.error(error);
