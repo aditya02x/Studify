@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../services/api.js";
+import api from "../Services/api.js";
 import { toast } from "react-toastify";
 
 const CourseDetail = () => {

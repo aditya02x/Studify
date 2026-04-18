@@ -1,5 +1,5 @@
 import React from "react";
-import api from "../../services/api.js";
+import api from "../../Services/api.js";
 import { toast } from "react-toastify";
 
 const UploadLecture = () => {
