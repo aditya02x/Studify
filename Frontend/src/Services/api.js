@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://studify-39te.onrender.com/api",,
+  baseURL: "https://studify-39te.onrender.com/api",
+  withCredentials: true
 });
 
 // ✅ ADD TOKEN AUTOMATICALLY
