@@ -8,7 +8,10 @@ import authRoutes from "./src/routes/auth.route.js";
 import courseRoutes from "./src/routes/course.route.js";
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors({
+      origin: "https://studify-khaki.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
 
 app.get('/',(req,res)=>{
