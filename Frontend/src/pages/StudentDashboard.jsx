@@ -8,7 +8,7 @@ const StudentDashboard = () => {
   const [name, setName] = React.useState('')
   const [active, setActive] = React.useState('view')
   const [courses, setCourses] = React.useState([])
-
+  const [loading, setLoading] = React.useState(true)
 
   useEffect(() => {
     const fetchCources = async () => {
