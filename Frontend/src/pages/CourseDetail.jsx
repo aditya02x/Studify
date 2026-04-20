@@ -37,7 +37,37 @@ const CourseDetail = () => {
   }, [id]);
 
 
-  const handelBuy = 
+const handleBuy = async () => {
+  try {
+    const { data: order } = await api.post("/payment/create-order", {
+      courseId: course._id,
+    });
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: "INR",
+      name: "Studify",
+      description: course.title,
+
+      handler: async function (response) {
+        await api.post("/payment/verify", {
+          paymentId: response.razorpay_payment_id,
+          courseId: course._id,
+        });
+
+        toast.success("Payment successful 🎉");
+        setPurchased(true);
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (error) {
+    toast.error("Payment failed");
+  }
+};
 
   // ✅ SAVE / BOOKMARK
   const handleSave = async () => {
