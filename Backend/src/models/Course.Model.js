@@ -13,7 +13,7 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    ispaid:{
+    isPaid:{
         type:Boolean,
         default:false
 
