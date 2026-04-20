@@ -1,4 +1,5 @@
 import Course from '../models/Course.Model.js';
+import Purchase from '../models/Purchase.model.js';
 
 export const createCourse = async (req, res) => {
     try {
@@ -53,11 +54,27 @@ export const getAllCourses = async (req, res) => {
 export const getSingleCourse = async (req, res) => {
     try {
         const courseId = req.params.id;
+        const userId = req.user?._id;
 
         const course = await Course.findById(courseId).select('title description price thumbnail createdAt updatedAt').populate('instructor', 'name email');
         if (!course) {
             return res.status(404).json({ message: "Course not found" });
         }
+        let hasPurchased = false;
+        if(userId){
+           const purchase = await Purchase.findOne({
+            userId,
+            courseId
+           })
+           hasPurchased = !!purchase;
+        }
+        if (course.price > 0 && !hasPurchased) {
+            return res.status(403).json({
+                message: "Please purchase this course"
+            });
+        }
+
+        
         return res.status(200).json({
             success: true,
             course
