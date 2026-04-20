@@ -10,6 +10,7 @@ const CourseDetail = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+  const [purchased,setPurchased] =useState(false)
 
   // ✅ FETCH COURSE
   useEffect(() => {
@@ -17,9 +18,16 @@ const CourseDetail = () => {
       try {
         const res = await api.get(`/courses/${id}`);
         setCourse(res.data.course);
+        setPurchased(true)  // user has acdes
       } catch (error) {
-        console.log("FETCH ERROR:", error.response?.data || error.message);
-        toast.error("Failed to load course");
+        if(error.response?.status === 403){
+          setPurchased(false);
+          const res = await api.get(`/courses/${id}?privew-true`)
+          setCourse(res.data.course)
+        }else{
+          toast.error("Failed to load course")
+        }
+
       } finally {
         setLoading(false);
       }
@@ -27,6 +35,9 @@ const CourseDetail = () => {
 
     fetchCourse();
   }, [id]);
+
+
+  const handelBuy = 
 
   // ✅ SAVE / BOOKMARK
   const handleSave = async () => {
