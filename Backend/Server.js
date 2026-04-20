@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import lectureRoutes from "./src/routes/lecture.routes.js";
 import authRoutes from "./src/routes/auth.route.js";
 import courseRoutes from "./src/routes/course.route.js";
+import paymrntroute from './src/routes/payement.route.js'
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/lectures", lectureRoutes);
+app.use("/payement" ,paymrntroute)
 
 // ✅ PORT
 const PORT = process.env.PORT || 3000;
