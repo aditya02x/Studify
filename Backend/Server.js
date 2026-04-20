@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/lectures", lectureRoutes);
-app.use("/payement" ,paymrntroute)
+app.use("/api/payement" ,paymrntroute)
 
 // ✅ PORT
 const PORT = process.env.PORT || 3000;
