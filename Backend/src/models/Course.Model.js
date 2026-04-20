@@ -13,6 +13,11 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    ispaid:{
+        type:Boolean,
+        default:false
+
+    },
     thumbnail: {
         type: String,
         default: "https://www.shutterstock.com/image-vector/default-placeholder-image-vector-260nw-138556879.jpg"
