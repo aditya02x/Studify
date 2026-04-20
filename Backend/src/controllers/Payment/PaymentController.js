@@ -1,5 +1,5 @@
-import razorpay from "../utils/razorpay";
-import Course from "../models/Course.Model.js";
+import razorpay from "../../utils/razorpay.js";
+import Course from "../../models/Course.Model.js";
 
 export const createOrder = async (req,res)=>{
     try {
