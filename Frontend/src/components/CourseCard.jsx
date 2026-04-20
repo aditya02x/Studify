@@ -2,13 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const CourseCard = ({ course, onEdit, onDelete, onAddLecture }) => {
-
   const navigate = useNavigate();
+
+  const isPaid = course.price > 0; // ✅ cleaner logic
 
   return (
     <div
-      onClick={() => navigate(`/course/${course._id}`)} // ✅ THIS LINE
-      className="border rounded-xl shadow-md p-4 w-full max-w-md bg-white cursor-pointer"
+      onClick={() => navigate(`/course/${course._id}`)}
+      className="border rounded-xl shadow-md p-4 w-full max-w-md bg-white cursor-pointer hover:shadow-lg transition"
     >
       
       {/* Thumbnail */}
@@ -30,15 +31,21 @@ const CourseCard = ({ course, onEdit, onDelete, onAddLecture }) => {
 
       {/* Price */}
       <p className="text-green-600 font-semibold mt-2">
-        ₹{course.price}
+        {isPaid ? `₹${course.price}` : "Free"}
       </p>
 
-      {/* Buttons */}
+      {/* Action Button (User View) */}
+      <button
+        className="mt-3 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg w-full"
+      >
+        {isPaid ? "Buy Now" : "Start Learning"}
+      </button>
+
+      {/* Admin Buttons */}
       <div
         className="flex gap-2 mt-4 flex-wrap"
-        onClick={(e) => e.stopPropagation()} // ✅ IMPORTANT (prevents redirect when clicking buttons)
+        onClick={(e) => e.stopPropagation()}
       >
-
         <button
           onClick={() => onEdit(course)}
           className="bg-blue-500 text-white px-3 py-1 rounded-lg"
@@ -59,7 +66,6 @@ const CourseCard = ({ course, onEdit, onDelete, onAddLecture }) => {
         >
           Add Lecture
         </button>
-
       </div>
     </div>
   );
