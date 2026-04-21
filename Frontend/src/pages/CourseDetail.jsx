@@ -65,6 +65,7 @@ const handleBuy = async () => {
     rzp.open();
 
   } catch (error) {
+    console.log("Payement failed",error)
     toast.error("Payment failed");
   }
 };
