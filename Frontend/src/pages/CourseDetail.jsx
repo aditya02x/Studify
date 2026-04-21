@@ -25,15 +25,7 @@ const CourseDetail = () => {
         console.log("Fetch error:", error.response?.data || error.message);
         toast.error("Failed to load course");
       } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourse();
-  }, [id]);
-
-  // 💳 HANDLE BUY
-  const handleBuy = async () => {
+        
     try {
       const { data: order } = await api.post("/api/payment/create-order", {
         courseId: id,
