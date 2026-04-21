@@ -12,29 +12,18 @@ const CourseDetail = () => {
   const [saved, setSaved] = useState(false);
   const [purchased, setPurchased] = useState(false);
 
-  // ✅ FETCH COURSE
+  // ✅ FETCH COURSE (FIXED)
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         const res = await api.get(`/courses/${id}`);
-        setCourse(res.data.course);
-        setPurchased(true); // user has access
-      } catch (error) {
-        if (error.response?.status === 403) {
-          // 🔐 Not purchased
-          setPurchased(false);
 
-          // TEMP preview fallback
-          setCourse({
-            title: "Locked Course",
-            description: "Purchase to unlock full content",
-            price: 999,
-            thumbnail:
-              "https://www.shutterstock.com/image-vector/default-placeholder-image-vector-260nw-138556879.jpg",
-          });
-        } else {
-          toast.error("Failed to load course");
-        }
+        setCourse(res.data.course);
+        setPurchased(res.data.hasPurchased); // ✅ correct source of truth
+
+      } catch (error) {
+        console.log("Fetch error:", error.response?.data || error.message);
+        toast.error("Failed to load course");
       } finally {
         setLoading(false);
       }
@@ -46,7 +35,7 @@ const CourseDetail = () => {
   // 💳 HANDLE BUY
   const handleBuy = async () => {
     try {
-      const { data: order } = await api.post("/payment/create-order", {
+      const { data: order } = await api.post("/api/payment/create-order", {
         courseId: id,
       });
 
@@ -58,7 +47,7 @@ const CourseDetail = () => {
         description: course.title,
 
         handler: async function (response) {
-          await api.post("/payment/verify", {
+          await api.post("/api/payment/verify", {
             paymentId: response.razorpay_payment_id,
             courseId: id,
           });
@@ -72,7 +61,7 @@ const CourseDetail = () => {
       rzp.open();
 
     } catch (error) {
-      console.log("Payment failed", error);
+      console.log("Payment failed:", error.response?.data || error.message);
       toast.error("Payment failed");
     }
   };
