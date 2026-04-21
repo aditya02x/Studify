@@ -1,12 +1,11 @@
 import razorpay from "../../utils/razorpay.js";
 import Course from "../../models/Course.Model.js";
 import Purchase from "../../models/Purchase.model.js";
+import crypto from "crypto";
 
 // ✅ CREATE ORDER
 export const createOrder = async (req, res) => {
   try {
-    console.log("BODY:", req.body);
-
     const { courseId } = req.body;
 
     if (!courseId) {
@@ -14,7 +13,6 @@ export const createOrder = async (req, res) => {
     }
 
     const course = await Course.findById(courseId);
-    console.log("COURSE:", course);
 
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
@@ -24,46 +22,53 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: "Free course" });
     }
 
-    // 🔥 ENV DEBUG (VERY IMPORTANT)
-    console.log("KEY ID:", process.env.RAZORPAY_KEY_ID);
-    console.log("KEY SECRET:", process.env.RAZORPAY_KEY_SECRET);
-
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-      return res.status(500).json({ message: "Razorpay keys missing" });
-    }
-
     const order = await razorpay.orders.create({
-      amount: course.price * 100, // paise
+      amount: course.price * 100,
       currency: "INR",
     });
-
-    console.log("ORDER:", order);
 
     return res.json(order);
 
   } catch (error) {
     console.error("Create Order error:", error);
     return res.status(500).json({
-      message: error.message || "Server Error",
+      message: "Server Error",
     });
   }
 };
 
-
-// ✅ VERIFY PAYMENT
+// ✅ VERIFY PAYMENT (SECURE)
 export const verifyPayment = async (req, res) => {
   try {
-    const { paymentId, courseId } = req.body;
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      courseId,
+    } = req.body;
+
     const userId = req.user._id;
 
-    if (!paymentId || !courseId) {
-      return res.status(400).json({ message: "Missing data" });
+    // 🔐 VERIFY SIGNATURE
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body.toString())
+      .digest("hex");
+
+    if (expectedSignature !== razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payment",
+      });
     }
 
+    // ✅ SAVE PURCHASE (ObjectId, NOT string)
     await Purchase.create({
       userId,
       courseId,
-      paymentId,
+      paymentId: razorpay_payment_id,
     });
 
     return res.json({ success: true });
