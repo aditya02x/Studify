@@ -10,7 +10,7 @@ const CourseDetail = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
-  const [purchased,setPurchased] =useState(false)
+  const [purchased, setPurchased] = useState(false);
 
   // ✅ FETCH COURSE
   useEffect(() => {
@@ -18,16 +18,23 @@ const CourseDetail = () => {
       try {
         const res = await api.get(`/courses/${id}`);
         setCourse(res.data.course);
-        setPurchased(true)  // user has acdes
+        setPurchased(true); // user has access
       } catch (error) {
-        if(error.response?.status === 403){
+        if (error.response?.status === 403) {
+          // 🔐 Not purchased
           setPurchased(false);
-          const res = await api.get(`/courses/${id}?privew-true`)
-          setCourse(res.data.course)
-        }else{
-          toast.error("Failed to load course")
-        }
 
+          // TEMP preview fallback
+          setCourse({
+            title: "Locked Course",
+            description: "Purchase to unlock full content",
+            price: 999,
+            thumbnail:
+              "https://www.shutterstock.com/image-vector/default-placeholder-image-vector-260nw-138556879.jpg",
+          });
+        } else {
+          toast.error("Failed to load course");
+        }
       } finally {
         setLoading(false);
       }
@@ -36,58 +43,52 @@ const CourseDetail = () => {
     fetchCourse();
   }, [id]);
 
-
-const handleBuy = async () => {
-  try {
-    const { data: order } = await api.post("/payment/create-order", {
-      courseId: course._id,
-    });
-
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: order.amount,
-      currency: "INR",
-      name: "Studify",
-      description: course.title,
-
-      handler: async function (response) {
-        await api.post("/payment/verify", {
-          paymentId: response.razorpay_payment_id,
-          courseId: course._id,
-        });
-
-        toast.success("Payment successful 🎉");
-        setPurchased(true);
-      },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-
-  } catch (error) {
-    console.log("Payement failed",error)
-    toast.error("Payment failed");
-  }
-};
-
-  // ✅ SAVE / BOOKMARK
-  const handleSave = async () => {
+  // 💳 HANDLE BUY
+  const handleBuy = async () => {
     try {
-      const res = await api.post(`/auth/bookmark/${course._id}`);
+      const { data: order } = await api.post("/payment/create-order", {
+        courseId: id,
+      });
 
-      setSaved((prev) => !prev);
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: "INR",
+        name: "Studify",
+        description: course.title,
 
-      toast.success(
-        res.data.success ? "Course updated" : "Done"
-      );
+        handler: async function (response) {
+          await api.post("/payment/verify", {
+            paymentId: response.razorpay_payment_id,
+            courseId: id,
+          });
+
+          toast.success("Payment successful 🎉");
+          setPurchased(true);
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
     } catch (error) {
-      console.log("SAVE ERROR:", error.response?.data || error.message);
-      toast.error(
-        error.response?.data?.message || "Failed to save course"
-      );
+      console.log("Payment failed", error);
+      toast.error("Payment failed");
     }
   };
 
+  // ❤️ SAVE
+  const handleSave = async () => {
+    try {
+      const res = await api.post(`/auth/bookmark/${id}`);
+      setSaved((prev) => !prev);
+      toast.success(res.data.success ? "Course updated" : "Done");
+    } catch (error) {
+      toast.error("Failed to save course");
+    }
+  };
+
+  // ⏳ LOADING
   if (loading) {
     return (
       <div className="text-center p-10 text-gray-300 bg-gray-950 min-h-screen">
@@ -96,6 +97,7 @@ const handleBuy = async () => {
     );
   }
 
+  // ❌ NOT FOUND
   if (!course) {
     return (
       <div className="text-center p-10 text-gray-300 bg-gray-950 min-h-screen">
@@ -126,12 +128,12 @@ const handleBuy = async () => {
           {/* Price + Buttons */}
           <div className="mt-6 flex items-center justify-between">
             <span className="text-2xl font-bold text-green-400">
-              ₹{course.price}
+              {course.price > 0 ? `₹${course.price}` : "Free"}
             </span>
 
             <div className="flex gap-3">
 
-              {/* SAVE BUTTON */}
+              {/* SAVE */}
               <button
                 onClick={handleSave}
                 className={`px-5 py-3 rounded-lg font-medium transition ${
@@ -143,19 +145,38 @@ const handleBuy = async () => {
                 {saved ? "❤️ Saved" : "Save Course"}
               </button>
 
-              {/* START LEARNING */}
-              <button
-                onClick={() =>
-                  navigate(`/course/${course._id}/lectures`)
-                }
-                className="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg font-medium transition"
-              >
-                Start Learning
-              </button>
+              {/* ACTION BUTTON */}
+              {course.price > 0 ? (
+                purchased ? (
+                  <button
+                    onClick={() =>
+                      navigate(`/course/${id}/lectures`)
+                    }
+                    className="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg font-medium"
+                  >
+                    Continue Learning
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleBuy}
+                    className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-medium"
+                  >
+                    Buy Now
+                  </button>
+                )
+              ) : (
+                <button
+                  onClick={() =>
+                    navigate(`/course/${id}/lectures`)
+                  }
+                  className="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg font-medium"
+                >
+                  Start Learning
+                </button>
+              )}
 
             </div>
           </div>
-
         </div>
       </div>
     </div>
