@@ -44,8 +44,8 @@ const CourseDetail = () => {
         name: "Studify",
         description: course.title,
 
-       handler: async function (response) {
-  console.log("Razorpay Response:", response);
+handler: async function (response) {
+  console.log("FULL RESPONSE:", response); // debug
 
   await api.post("/payment/verify", {
     razorpay_order_id: response.razorpay_order_id,
