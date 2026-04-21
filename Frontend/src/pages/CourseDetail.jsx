@@ -17,12 +17,10 @@ const CourseDetail = () => {
     const fetchCourse = async () => {
       try {
         const res = await api.get(`/courses/${id}`);
-
         setCourse(res.data.course);
-        setPurchased(res.data.hasPurchased); // ✅ correct
-
+        setPurchased(res.data.hasPurchased);
       } catch (error) {
-        console.log("Fetch error:", error.response?.data || error.message);
+        console.log(error)
         toast.error("Failed to load course");
       } finally {
         setLoading(false);
@@ -32,7 +30,7 @@ const CourseDetail = () => {
     fetchCourse();
   }, [id]);
 
-  // 💳 HANDLE BUY (FIXED HERE)
+  // 💳 BUY COURSE
   const handleBuy = async () => {
     try {
       const { data: order } = await api.post("/payment/create-order", {
@@ -46,22 +44,26 @@ const CourseDetail = () => {
         name: "Studify",
         description: course.title,
 
-        handler: async function (response) {
-          await api.post("/payment/verify", {
-            paymentId: response.razorpay_payment_id,
-            courseId: id,
-          });
+       handler: async function (response) {
+  console.log("Razorpay Response:", response);
 
-          toast.success("Payment successful 🎉");
-          setPurchased(true);
-        },
+  await api.post("/payment/verify", {
+    razorpay_order_id: response.razorpay_order_id,
+    razorpay_payment_id: response.razorpay_payment_id,
+    razorpay_signature: response.razorpay_signature,
+    courseId: id,
+  });
+
+  toast.success("Payment successful 🎉");
+  setPurchased(true);
+},
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
 
     } catch (error) {
-      console.log("Payment failed:", error.response?.data || error.message);
+      console.log(error);
       toast.error("Payment failed");
     }
   };
@@ -71,25 +73,23 @@ const CourseDetail = () => {
     try {
       const res = await api.post(`/auth/bookmark/${id}`);
       setSaved((prev) => !prev);
-      toast.success(res.data.success ? "Course updated" : "Done");
-    } catch (error) {
-      toast.error("Failed to save course");
+      toast.success("Saved");
+    } catch {
+      toast.error("Failed to save");
     }
   };
 
-  // ⏳ LOADING
   if (loading) {
     return (
-      <div className="text-center p-10 text-gray-300 bg-gray-950 min-h-screen">
-        Loading course details...
+      <div className="text-center p-10 bg-gray-950 text-white">
+        Loading...
       </div>
     );
   }
 
-  // ❌ NOT FOUND
   if (!course) {
     return (
-      <div className="text-center p-10 text-gray-300 bg-gray-950 min-h-screen">
+      <div className="text-center p-10 bg-gray-950 text-white">
         Course not found
       </div>
     );
@@ -99,56 +99,47 @@ const CourseDetail = () => {
     <div className="min-h-screen bg-gray-950 text-white p-6">
       <div className="max-w-5xl mx-auto">
 
-        {/* Thumbnail */}
         <img
           src={course.thumbnail}
           alt={course.title}
           className="w-full h-96 object-cover rounded-xl"
         />
 
-        {/* Content */}
         <div className="mt-6">
           <h1 className="text-4xl font-bold">{course.title}</h1>
 
-          <p className="text-gray-400 mt-4 text-lg">
+          <p className="text-gray-400 mt-4">
             {course.description}
           </p>
 
-          {/* Price + Buttons */}
-          <div className="mt-6 flex items-center justify-between">
-            <span className="text-2xl font-bold text-green-400">
+          <div className="mt-6 flex justify-between items-center">
+            <span className="text-2xl text-green-400 font-bold">
               {course.price > 0 ? `₹${course.price}` : "Free"}
             </span>
 
             <div className="flex gap-3">
 
-              {/* SAVE */}
               <button
                 onClick={handleSave}
-                className={`px-5 py-3 rounded-lg font-medium transition ${
-                  saved
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-gray-700 hover:bg-gray-600"
-                }`}
+                className="bg-gray-700 px-4 py-2 rounded"
               >
-                {saved ? "❤️ Saved" : "Save Course"}
+                {saved ? "❤️ Saved" : "Save"}
               </button>
 
-              {/* ACTION BUTTON */}
               {course.price > 0 ? (
                 purchased ? (
                   <button
                     onClick={() =>
                       navigate(`/course/${id}/lectures`)
                     }
-                    className="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg font-medium"
+                    className="bg-indigo-600 px-5 py-2 rounded"
                   >
                     Continue Learning
                   </button>
                 ) : (
                   <button
                     onClick={handleBuy}
-                    className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-medium"
+                    className="bg-green-600 px-5 py-2 rounded"
                   >
                     Buy Now
                   </button>
@@ -158,7 +149,7 @@ const CourseDetail = () => {
                   onClick={() =>
                     navigate(`/course/${id}/lectures`)
                   }
-                  className="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg font-medium"
+                  className="bg-indigo-600 px-5 py-2 rounded"
                 >
                   Start Learning
                 </button>
