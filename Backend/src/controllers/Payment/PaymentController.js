@@ -40,6 +40,7 @@ export const createOrder = async (req, res) => {
 // ✅ VERIFY PAYMENT (SECURE)
 export const verifyPayment = async (req, res) => {
   try {
+    console.log("VERIFY BODY:", req.body);
     const {
       razorpay_order_id,
       razorpay_payment_id,
