@@ -12,22 +12,30 @@ const CourseDetail = () => {
   const [saved, setSaved] = useState(false);
   const [purchased, setPurchased] = useState(false);
 
-  // ✅ FETCH COURSE (FIXED)
+  // ✅ FETCH COURSE
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         const res = await api.get(`/courses/${id}`);
 
         setCourse(res.data.course);
-        setPurchased(res.data.hasPurchased); // ✅ correct source of truth
+        setPurchased(res.data.hasPurchased); // ✅ correct
 
       } catch (error) {
         console.log("Fetch error:", error.response?.data || error.message);
         toast.error("Failed to load course");
       } finally {
-        
+        setLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [id]);
+
+  // 💳 HANDLE BUY (FIXED HERE)
+  const handleBuy = async () => {
     try {
-      const { data: order } = await api.post("/api/payment/create-order", {
+      const { data: order } = await api.post("/payment/create-order", {
         courseId: id,
       });
 
@@ -39,7 +47,7 @@ const CourseDetail = () => {
         description: course.title,
 
         handler: async function (response) {
-          await api.post("/api/payment/verify", {
+          await api.post("/payment/verify", {
             paymentId: response.razorpay_payment_id,
             courseId: id,
           });
