@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
-import { createOrder, verifyPayment } from '../controllers/payement.controller.js';
-import { authMiddleware } from '../middlewares/auth.middleware.js';
+import { createOrder, verifyPayment } from '../controllers/Payment/PaymentController.js';
+import  authMiddleware  from '../middleware/auth.middleware.js';
 
 const router = express.Router()
 router.post('/create-order',authMiddleware,createOrder);

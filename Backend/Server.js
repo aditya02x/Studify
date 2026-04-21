@@ -1,32 +1,26 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
 import { connectDB } from "./src/db/db.js";
 import dotenv from "dotenv";
 import lectureRoutes from "./src/routes/lecture.routes.js";
 import authRoutes from "./src/routes/auth.route.js";
 import courseRoutes from "./src/routes/course.route.js";
-import paymrntroute from './src/routes/payement.route.js'
+import paymentRoute from "./src/routes/payement.route.js";
 
 dotenv.config();
 
 const app = express();
 
-// ✅ CORS (supports Vercel + local dev + mobile)
+// ✅ Better CORS (auto handles localhost + deployed)
 const allowedOrigins = [
-  "http://localhost:5173",
+  "http://localhost:5173", // local frontend
+  "http://localhost:3000",
   "https://studify-khaki.vercel.app"
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true
   })
 );
@@ -34,31 +28,31 @@ app.use(
 // ✅ Middleware
 app.use(express.json());
 
-// ✅ Health check route
+// ✅ Health check
 app.get("/", (req, res) => {
-  res.send("Welcome to Studify API");
+  res.send("API running locally 🚀");
 });
 
 // ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/lectures", lectureRoutes);
-app.use("/api/payement" ,paymrntroute)
+app.use("/api/payment", paymentRoute); // fixed typo
 
 // ✅ PORT
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000; // 👈 use 5000 for local
 
 // ✅ Start server
-const StartServer = async () => {
+const startServer = async () => {
   try {
     await connectDB();
 
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error("Error starting the server", error);
+    console.error("Server error:", error);
   }
 };
 
-StartServer();
+startServer();
