@@ -80,7 +80,11 @@ handler: async function (response) {
   };
 
   if (loading) {
-   
+    return (
+      <div className="text-center p-10 bg-gray-950 text-white">
+        Loading...
+      </div>
+    );
   }
 
   if (!course) {
