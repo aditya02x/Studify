@@ -30,7 +30,7 @@ const CourseDetail = () => {
     fetchCourse();
   }, [id]);
 
-  // 💳 BUY COURSE (🔥 FINAL FIXED)
+  // 💳 BUY COURSE (FINAL FIXED)
   const handleBuy = async () => {
     try {
       const { data: order } = await api.post("/payment/create-order", {
@@ -44,8 +44,6 @@ const CourseDetail = () => {
         name: "Studify",
         description: course.title,
 
-        order_id: order.id, // 🔥 MOST IMPORTANT LINE
-
         handler: async function (response) {
           console.log("FULL RESPONSE:", response);
 
@@ -58,7 +56,7 @@ const CourseDetail = () => {
 
           toast.success("Payment successful 🎉");
 
-          // ✅ re-fetch so refresh issue is gone
+          // 🔥 IMPORTANT: re-fetch from backend (not just local state)
           fetchCourse();
         },
       };
@@ -103,12 +101,14 @@ const CourseDetail = () => {
     <div className="min-h-screen bg-gray-950 text-white p-6">
       <div className="max-w-5xl mx-auto">
 
+        {/* Thumbnail */}
         <img
           src={course.thumbnail}
           alt={course.title}
           className="w-full h-96 object-cover rounded-xl"
         />
 
+        {/* Content */}
         <div className="mt-6">
           <h1 className="text-4xl font-bold">{course.title}</h1>
 
@@ -116,13 +116,12 @@ const CourseDetail = () => {
             {course.description}
           </p>
 
-          <div className="mt-6 flex justify-between items-center">
-            <span className="text-2xl text-green-400 font-bold">
               {course.price > 0 ? `₹${course.price}` : "Free"}
             </span>
 
             <div className="flex gap-3">
 
+              {/* SAVE */}
               <button
                 onClick={handleSave}
                 className="bg-gray-700 px-4 py-2 rounded"
@@ -130,6 +129,7 @@ const CourseDetail = () => {
                 {saved ? "❤️ Saved" : "Save"}
               </button>
 
+              {/* ACTION BUTTON */}
               {course.price > 0 ? (
                 purchased ? (
                   <button
