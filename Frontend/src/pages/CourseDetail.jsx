@@ -13,24 +13,24 @@ const CourseDetail = () => {
   const [purchased, setPurchased] = useState(false);
 
   // ✅ FETCH COURSE
-  useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const res = await api.get(`/courses/${id}`);
-        setCourse(res.data.course);
-        setPurchased(res.data.hasPurchased);
-      } catch (error) {
-        console.log(error)
-        toast.error("Failed to load course");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCourse = async () => {
+    try {
+      const res = await api.get(`/courses/${id}`);
+      setCourse(res.data.course);
+      setPurchased(res.data.hasPurchased);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load course");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCourse();
   }, [id]);
 
-  // 💳 BUY COURSE
+  // 💳 BUY COURSE (🔥 FINAL FIXED)
   const handleBuy = async () => {
     try {
       const { data: order } = await api.post("/payment/create-order", {
@@ -44,19 +44,23 @@ const CourseDetail = () => {
         name: "Studify",
         description: course.title,
 
-handler: async function (response) {
-  console.log("FULL RESPONSE:", response); // debug
+        order_id: order.id, // 🔥 MOST IMPORTANT LINE
 
-  await api.post("/payment/verify", {
-    razorpay_order_id: response.razorpay_order_id,
-    razorpay_payment_id: response.razorpay_payment_id,
-    razorpay_signature: response.razorpay_signature,
-    courseId: id,
-  });
+        handler: async function (response) {
+          console.log("FULL RESPONSE:", response);
 
-  toast.success("Payment successful 🎉");
-  setPurchased(true);
-},
+          await api.post("/payment/verify", {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            courseId: id,
+          });
+
+          toast.success("Payment successful 🎉");
+
+          // ✅ re-fetch so refresh issue is gone
+          fetchCourse();
+        },
       };
 
       const rzp = new window.Razorpay(options);
@@ -71,7 +75,7 @@ handler: async function (response) {
   // ❤️ SAVE
   const handleSave = async () => {
     try {
-      const res = await api.post(`/auth/bookmark/${id}`);
+      await api.post(`/auth/bookmark/${id}`);
       setSaved((prev) => !prev);
       toast.success("Saved");
     } catch {
@@ -156,11 +160,7 @@ handler: async function (response) {
               )}
 
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    
 };
 
 export default CourseDetail;
