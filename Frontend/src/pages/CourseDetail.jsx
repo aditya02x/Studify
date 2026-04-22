@@ -131,7 +131,10 @@ const CourseDetail = () => {
               </button>
 
               {course.price > 0 ? (
-                
+                purchased ? (
+                  <button
+                    onClick={() =>
+                      navigate(`/course/${id}/lectures`)
                     }
                     className="bg-indigo-600 px-5 py-2 rounded"
                   >
