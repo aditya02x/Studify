@@ -97,9 +97,6 @@ const CourseDetail = () => {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
-      <div className="max-w-5xl mx-auto">
 
         {/* Thumbnail */}
         <img
