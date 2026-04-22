@@ -57,10 +57,7 @@ handler: async function (response) {
   toast.success("Payment successful 🎉");
   setPurchased(true);
 },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+  
 
     } catch (error) {
       console.log(error);
