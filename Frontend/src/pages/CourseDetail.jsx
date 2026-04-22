@@ -116,6 +116,9 @@ const CourseDetail = () => {
             {course.description}
           </p>
 
+          {/* Price + Actions */}
+          <div className="mt-6 flex justify-between items-center">
+            <span className="text-2xl text-green-400 font-bold">
               {course.price > 0 ? `₹${course.price}` : "Free"}
             </span>
 
