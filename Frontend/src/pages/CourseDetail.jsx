@@ -160,7 +160,11 @@ const CourseDetail = () => {
               )}
 
             </div>
-    
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default CourseDetail;
