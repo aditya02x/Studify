@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../Services/api.js";
 import { toast } from "react-toastify";
 
-const CourseDetail = () => {
+cons
   const { id } = useParams();
   const navigate = useNavigate();
 
