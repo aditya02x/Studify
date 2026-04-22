@@ -8,11 +8,7 @@ const CourseDetail = () => {
   const navigate = useNavigate();
 
   const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saved, setSaved] = useState(false);
-  const [purchased, setPurchased] = useState(false);
-
-  // ✅ FETCH COURSE
+  const [loading, se
   const fetchCourse = async () => {
     try {
       const res = await api.get(`/courses/${id}`);
