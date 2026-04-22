@@ -13,24 +13,24 @@ const CourseDetail = () => {
   const [purchased, setPurchased] = useState(false);
 
   // ✅ FETCH COURSE
-  const fetchCourse = async () => {
-    try {
-      const res = await api.get(`/courses/${id}`);
-      setCourse(res.data.course);
-      setPurchased(res.data.hasPurchased);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to load course");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const res = await api.get(`/courses/${id}`);
+        setCourse(res.data.course);
+        setPurchased(res.data.hasPurchased);
+      } catch (error) {
+        console.log(error)
+        toast.error("Failed to load course");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchCourse();
   }, [id]);
 
-  // 💳 BUY COURSE (FINAL FIXED)
+  // 💳 BUY COURSE
   const handleBuy = async () => {
     try {
       const { data: order } = await api.post("/payment/create-order", {
@@ -44,21 +44,19 @@ const CourseDetail = () => {
         name: "Studify",
         description: course.title,
 
-        handler: async function (response) {
-          console.log("FULL RESPONSE:", response);
+handler: async function (response) {
+  console.log("FULL RESPONSE:", response); // debug
 
-          await api.post("/payment/verify", {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            courseId: id,
-          });
+  await api.post("/payment/verify", {
+    razorpay_order_id: response.razorpay_order_id,
+    razorpay_payment_id: response.razorpay_payment_id,
+    razorpay_signature: response.razorpay_signature,
+    courseId: id,
+  });
 
-          toast.success("Payment successful 🎉");
-
-          // 🔥 IMPORTANT: re-fetch from backend (not just local state)
-          fetchCourse();
-        },
+  toast.success("Payment successful 🎉");
+  setPurchased(true);
+},
       };
 
       const rzp = new window.Razorpay(options);
@@ -73,7 +71,7 @@ const CourseDetail = () => {
   // ❤️ SAVE
   const handleSave = async () => {
     try {
-      await api.post(`/auth/bookmark/${id}`);
+      const res = await api.post(`/auth/bookmark/${id}`);
       setSaved((prev) => !prev);
       toast.success("Saved");
     } catch {
@@ -82,11 +80,7 @@ const CourseDetail = () => {
   };
 
   if (loading) {
-    return (
-      <div className="text-center p-10 bg-gray-950 text-white">
-        Loading...
-      </div>
-    );
+   
   }
 
   if (!course) {
@@ -101,14 +95,12 @@ const CourseDetail = () => {
     <div className="min-h-screen bg-gray-950 text-white p-6">
       <div className="max-w-5xl mx-auto">
 
-        {/* Thumbnail */}
         <img
           src={course.thumbnail}
           alt={course.title}
           className="w-full h-96 object-cover rounded-xl"
         />
 
-        {/* Content */}
         <div className="mt-6">
           <h1 className="text-4xl font-bold">{course.title}</h1>
 
@@ -116,7 +108,6 @@ const CourseDetail = () => {
             {course.description}
           </p>
 
-          {/* Price + Actions */}
           <div className="mt-6 flex justify-between items-center">
             <span className="text-2xl text-green-400 font-bold">
               {course.price > 0 ? `₹${course.price}` : "Free"}
@@ -124,7 +115,6 @@ const CourseDetail = () => {
 
             <div className="flex gap-3">
 
-              {/* SAVE */}
               <button
                 onClick={handleSave}
                 className="bg-gray-700 px-4 py-2 rounded"
@@ -132,7 +122,6 @@ const CourseDetail = () => {
                 {saved ? "❤️ Saved" : "Save"}
               </button>
 
-              {/* ACTION BUTTON */}
               {course.price > 0 ? (
                 purchased ? (
                   <button
