@@ -58,6 +58,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Routes
+app.use("/", authRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/lectures", lectureRoutes);
