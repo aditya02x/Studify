@@ -58,11 +58,13 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Routes
-app.use("/", authRoutes);
+
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/lectures", lectureRoutes);
 app.use("/api/payment", paymentRoute);
+
+app.use("/", authRoutes);
 
 // ❌ 404 (ALWAYS LAST)
 app.use((req, res) => {
