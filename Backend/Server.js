@@ -71,6 +71,8 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
+
+
 // ❌ Global error handler
 app.use((err, req, res, next) => {
   console.error("🔥 Error:", err.message);
