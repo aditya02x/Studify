@@ -38,7 +38,16 @@ const CourseDetail = () => {
       });
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: "INR",
+        name: "Studify",
+        description: course.title,
+
+handler: async function (response) {
+  console.log("FULL RESPONSE:", response); // debug
+
+    razorpay_payment_id: response.razorpay_payment_id,
     razorpay_signature: response.razorpay_signature,
     courseId: id,
   });
