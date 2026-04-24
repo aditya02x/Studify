@@ -33,10 +33,6 @@ const CourseDetail = () => {
   // 💳 BUY COURSE
   const handleBuy = async () => {
     try {
-      const { data: order } = await api.post("/payment/create-order", {
-        courseId: id,
-      });
-
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: order.amount,
