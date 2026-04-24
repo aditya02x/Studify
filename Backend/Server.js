@@ -19,11 +19,10 @@ const allowedOrigins = [
   "https://studify-khaki.vercel.app"
 ];
 
-// ✅ FIXED CORS (dynamic origin)
+// ✅ CORS (production-safe)
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -39,13 +38,21 @@ app.use(
 // ✅ Middleware
 app.use(express.json());
 
-// ✅ Debug logger (remove in production if needed)
+// ✅ Debug logger
 app.use((req, res, next) => {
   console.log(`➡️ ${req.method} ${req.url}`);
   next();
 });
 
-// ✅ Health check
+// ✅ Health check (KEEP THIS ABOVE ROUTES)
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Server is healthy 🚀"
+  });
+});
+
+// ✅ Root route
 app.get("/", (req, res) => {
   res.send("API running 🚀");
 });
@@ -56,15 +63,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/lectures", lectureRoutes);
 app.use("/api/payment", paymentRoute);
 
-// ❌ 404 handler
-
-
-app.get("/api/health", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    message: "Server is healthy 🚀"
-  });
-});
+// ❌ 404 (ALWAYS LAST)
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
@@ -72,7 +71,9 @@ app.use((req, res) => {
 // ❌ Global error handler
 app.use((err, req, res, next) => {
   console.error("🔥 Error:", err.message);
-  res.status(500).json({ message: err.message || "Server error" });
+  res.status(500).json({
+    message: err.message || "Server error"
+  });
 });
 
 // ✅ PORT
