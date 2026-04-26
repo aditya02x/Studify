@@ -116,3 +116,18 @@ export const deleteCourse = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getMyCourses = async (req, res) => {
+  try {
+    const courses = await Course.find({ instructor: req.user._id })
+      .select("title price thumbnail createdAt");
+
+    return res.status(200).json({
+      success: true,
+      courses,
+    });
+  } catch (error) {
+    console.error("Error in getMyCourses", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
