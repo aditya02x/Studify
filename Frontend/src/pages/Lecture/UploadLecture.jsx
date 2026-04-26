@@ -15,8 +15,10 @@ const UploadLecture = () => {
       try {
         const res = await api.get("/courses/my-courses");
         setCourses(res.data.courses);
-      } catch (err) {
+      } catch (error) {
         toast.error("Failed to load courses");
+        console.log(error
+        )
       }
     };
     fetchCourses();
